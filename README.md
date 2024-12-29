@@ -1,3 +1,3 @@
 # weather-api-python
 
-[Edit in StackBlitz next generation editor ⚡️](https://stackblitz.com/~/github.com/Jopgood/weather-api-python)
+[Roadmap Weather API link](https://roadmap.sh/projects/weather-api-wrapper-service)

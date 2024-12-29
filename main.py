@@ -8,7 +8,7 @@ from weather_service import WeatherService
 
 load_dotenv()
 
-app = FastAPI(title="Weather API Intermediary")
+app = FastAPI(title="Weather API Wrapper")
 
 # CORS middleware configuration
 app.add_middleware(
@@ -24,3 +24,11 @@ weather_service = WeatherService()
 @app.get("/")
 async def health_check():
     return {"status": "healthy", "service": "weather-api"}
+
+@app.get("/weather/{city}")
+async def get_weather(city: str):
+    try:
+        weather_data = await weather_service.get_weather(city)
+        return weather_data
+    except httpx.HTTPError as e:
+        raise HTTPException("Internal Server Error")

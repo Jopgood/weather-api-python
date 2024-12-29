@@ -4,7 +4,7 @@ from redis_client import redis_client
 
 class WeatherService:
     def __init__(self):
-        self.base_url = "https://api.weatherapi.com/v1"  # Example weather API
+        self.base_url = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services"  # Api Services root
         self.cache_ttl = 1800  # 30 minutes cache
 
     async def get_weather(self, city: str) -> Dict:
@@ -19,10 +19,12 @@ class WeatherService:
         async with httpx.AsyncClient() as client:
             try:
                 response = await client.get(
-                    f"{self.base_url}/current.json",
+                    f"{self.base_url}/timeline/{city}",
                     params={
-                        "key": "YOUR_API_KEY",  # Should be in environment variables
-                        "q": city
+                        "key": "EAUAFFRDNRP23RE6KKSWAXXPK",  # TODO: Create a config file for this
+                        "unitGroup": 'metric',
+                        "include": 'current',
+                        "contentType": 'json'
                     }
                 )
                 response.raise_for_status()
