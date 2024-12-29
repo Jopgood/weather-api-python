@@ -1,0 +1,9 @@
+{
+  "name": "weather-api",
+  "version": "1.0.0",
+  "description": "Weather API intermediary with Redis caching",
+  "type": "module",
+  "dependencies": {
+    "ioredis": "^5.3.2"
+  }
+}
