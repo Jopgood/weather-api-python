@@ -7,13 +7,17 @@ class WeatherService:
         self.base_url = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services"  # Api Services root
         self.cache_ttl = 1800  # 30 minutes cache
 
-    async def get_weather(self, city: str) -> Dict:
+    async def get_weather(self, city: str, clear_cache=False) -> Dict:
         # Try to get from cache first
         cache_key = f"weather:{city}"
+
+        if clear_cache:
+            await redis_client.delete(cache_key)
+     
         cached_data = await redis_client.get(cache_key)
         
         if cached_data:
-            return cached_data
+            return [cached_data, 'from cache']
 
         # If not in cache, fetch from external API
         async with httpx.AsyncClient() as client:

@@ -15,9 +15,6 @@ def test_city_weather():
     # Parse the results as JSON
     jsonData = response.json()
 
-    print(jsonData)
-
-
     assert 'London' in jsonData['resolvedAddress']
 
     

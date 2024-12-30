@@ -26,9 +26,9 @@ async def health_check():
     return {"status": "healthy", "service": "weather-api"}
 
 @app.get("/weather/{city}")
-async def get_weather(city: str):
+async def get_weather(city: str, clear_cache: bool = False):
     try:
-        weather_data = await weather_service.get_weather(city)
+        weather_data = await weather_service.get_weather(city, clear_cache)
         return weather_data
     except httpx.HTTPError as e:
         raise HTTPException("Internal Server Error")
