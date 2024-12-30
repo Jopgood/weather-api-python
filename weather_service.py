@@ -1,6 +1,10 @@
 from typing import Dict, Optional
 import httpx
-from redis_client import redis_client
+from cache.client import redis_client
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class WeatherService:
     def __init__(self):
@@ -12,9 +16,9 @@ class WeatherService:
         cache_key = f"weather:{city}"
 
         if clear_cache:
-            await redis_client.delete(cache_key)
+            redis_client.delete(cache_key)
      
-        cached_data = await redis_client.get(cache_key)
+        cached_data = redis_client.get(cache_key)
         
         if cached_data:
             return [cached_data, 'from cache']
@@ -25,7 +29,7 @@ class WeatherService:
                 response = await client.get(
                     f"{self.base_url}/timeline/{city}",
                     params={
-                        "key": "EAUAFFRDNRP23RE6KKSWAXXPK",  # TODO: Create a config file for this
+                        "key": os.environ['API_KEY'],  # TODO: Create a config file for this
                         "unitGroup": 'metric',
                         "include": 'current',
                         "contentType": 'json'
@@ -35,10 +39,10 @@ class WeatherService:
                 weather_data = response.json()
 
                 # Cache the response
-                await redis_client.set(
+                redis_client.set(
                     cache_key,
-                    weather_data,
-                    expire=self.cache_ttl
+                    str(weather_data),
+                    ex=self.cache_ttl
                 )
 
                 return weather_data
